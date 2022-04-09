@@ -200,20 +200,21 @@ function drawBlock(x, y, select, highlight) {
 	return selected;
 }
 
+function getSelectedBlock() {
+	for (let y = 17; y >= 0; y--) {
+		for (let x = 0; x < 3; x++) {
+			if (blocks[y * 3 + x] && drawBlock(x, y, true, false))
+				return y * 3 + x;
+		}
+	}
+	return null;
+}
+
 function redrawCanvas() {
 	if (blocks === null)
 		return;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	let selected = null;
-select:
-	for (let y = 17; y >= 0; y--) {
-		for (let x = 0; x < 3; x++) {
-			if (blocks[y * 3 + x] && drawBlock(x, y, true, false)) {
-				selected = y * 3 + x;
-				break select;
-			}
-		}
-	}
+	const selected = getSelectedBlock();
 	for (let y = 0; y < 18; y++) {
 		for (let x = 0; x < 3; x++) {
 			if (blocks[y * 3 + x])
@@ -247,6 +248,12 @@ window.addEventListener("popstate", () => {
 canvas.addEventListener("pointermove", (event) => {
 	cursor[0] = event.offsetX;
 	cursor[1] = event.offsetY;
+	redrawCanvas();
+});
+canvas.addEventListener("pointerdown", (event) => {
+	const selected = getSelectedBlock();
+	if (selected !== null)
+		blocks[selected] = false;
 	redrawCanvas();
 });
 
