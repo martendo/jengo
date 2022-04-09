@@ -144,7 +144,7 @@ function drawBlock(x, y) {
 	ctx.strokeStyle = "#000000";
 	ctx.lineWidth = 1;
 	const originx = canvas.width / 2 + x * offset / 3;
-	const originy = canvas.height / 2 + BLOCK_HEIGHT * 9 - y * BLOCK_HEIGHT - BLOCK_WIDTH * x / 3;
+	const originy = canvas.height / 2 + BLOCK_HEIGHT * 12 - y * BLOCK_HEIGHT - BLOCK_WIDTH * x / 3;
 	ctx.beginPath();
 	ctx.moveTo(originx, originy);
 	ctx.lineTo(originx + offset / 3, originy - BLOCK_WIDTH / 3);
