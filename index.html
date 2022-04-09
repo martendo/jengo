@@ -6,36 +6,44 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<div id="left-bar">left bar</div>
-		<div id="top-bar">_____'s Turn!</div>
-		<table id="info-box">
-			<tbody>
-				<tr>
-					<td><button id="game-code">wxyz</button></td>
-					<td><button id="help-btn">?</button></td>
-				</tr>
-			</tbody>
-		</table>
-		<canvas id="canvas">Your browser does not support the HTML Canvas element! :(</canvas>
-		<table id="scoreboard">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Pts.</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>You</td>
-					<td>0</td>
-				</tr>
-				<tr>
-					<td>Test</td>
-					<td>235</td>
-				</tr>
-			</tbody>
-		</table>
-		<div id="chat">chat</div>
+		<section id="home">
+			<h1>Jengo</h1>
+			<p><button id="create-game">Create Game</button> <button id="join-game">Join Game</button></p>
+			<p><label for="game-code">Game code: </label><input id="game-code" type="text"></p>
+		</section>
+
+		<section id="game">
+			<div id="left-bar">left bar</div>
+			<div id="top-bar">_____'s Turn!</div>
+			<table id="info-box">
+				<tbody>
+					<tr>
+						<td><button id="game-code-btn">wxyz</button></td>
+						<td><button id="help-btn">?</button></td>
+					</tr>
+				</tbody>
+			</table>
+			<canvas id="canvas">Your browser does not support the HTML Canvas element! :(</canvas>
+			<table id="scoreboard">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Pts.</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>You</td>
+						<td>0</td>
+					</tr>
+					<tr>
+						<td>Test</td>
+						<td>235</td>
+					</tr>
+				</tbody>
+			</table>
+			<div id="chat">chat</div>
+		</section>
 
 		<section id="help">
 			<h2>How To Play</h2>

@@ -17,6 +17,19 @@ function copyText(text) {
 	});
 }
 
+const home = document.getElementById("home");
+const game = document.getElementById("game");
+
+function joinGame(code) {
+	if (!code.length)
+		return;
+	gameCode = code;
+	window.location.hash = gameCode;
+	home.style.display = "none";
+	game.style.display = "grid";
+	resizeCanvas();
+}
+
 function redrawCanvas() {
 	ctx.strokeStyle = "#000000";
 	ctx.lineWidth = 1;
@@ -31,9 +44,21 @@ function resizeCanvas() {
 
 window.addEventListener("resize", resizeCanvas);
 
-resizeCanvas();
+window.addEventListener("popstate", () => {
+	if (window.location.hash.length) {
+		joinGame(decodeURIComponent(window.location.hash.slice(1)));
+	} else {
+		gameCode = null;
+		home.style.display = "unset";
+		game.style.display = "";
+	}
+});
 
-document.getElementById("game-code").addEventListener("click", () => copyText(`${window.location.origin}${window.location.pathname}#${encodeURIComponent(gameCode)}`));
+const gameCodeInput = document.getElementById("game-code");
+document.getElementById("create-game").addEventListener("click", () => joinGame(gameCodeInput.value));
+document.getElementById("join-game").addEventListener("click", () => joinGame(gameCodeInput.value));
+
+document.getElementById("game-code-btn").addEventListener("click", () => copyText(`${window.location.origin}${window.location.pathname}#${encodeURIComponent(gameCode)}`));
 
 const help = document.getElementById("help");
 document.getElementById("help-btn").addEventListener("click", () => {
@@ -42,3 +67,6 @@ document.getElementById("help-btn").addEventListener("click", () => {
 	else
 		help.style.display = "";
 });
+
+if (window.location.hash.length)
+	joinGame(decodeURIComponent(window.location.hash.slice(1)));
