@@ -13,6 +13,7 @@ let turn = null;
 
 let blocks = null;
 let cursor = [0, 0];
+let selectedBlock = null;
 
 function copyText(text) {
 	navigator.clipboard.writeText(text).catch(() => {
@@ -86,10 +87,19 @@ socket.addEventListener("message", (event) => {
 			updateScoreboard();
 			break;
 		case "turn":
+			selectedBlock = null;
 			setTurn(data.id);
+			redrawCanvas();
 			break;
 		case "block-removed":
 			blocks[data.index] = false;
+			selectedBlock = null;
+			redrawCanvas();
+			break;
+		case "block-selected":
+			selectedBlock = data.index;
+			if (data.id === thisId)
+				startGame();
 			redrawCanvas();
 			break;
 		default:
@@ -129,10 +139,9 @@ function leaveGame() {
 function setTurn(id) {
 	turn = id;
 	let whose;
-	stopGame();
+	stopGame(false);
 	if (turn === thisId) {
 		whose = "Your";
-		startGame();
 	} else {
 		whose = `${turn}'s`;
 	}
@@ -225,7 +234,7 @@ function redrawCanvas() {
 	for (let y = 0; y < 18; y++) {
 		for (let x = 0; x < 3; x++) {
 			if (blocks[y * 3 + x])
-				drawBlock(x, y, false, y * 3 + x === selected);
+				drawBlock(x, y, false, y * 3 + x === selected || y * 3 + x === selectedBlock);
 		}
 	}
 }
@@ -261,7 +270,7 @@ canvas.addEventListener("pointerdown", (event) => {
 	const selected = getSelectedBlock();
 	if (selected !== null) {
 		sendServer({
-			type: "remove-block",
+			type: "select-block",
 			index: selected,
 		});
 	}

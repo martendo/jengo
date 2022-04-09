@@ -173,6 +173,15 @@ wss.on("connection", (socket) => {
 				if (player.game)
 					player.game.leave(player);
 				break;
+			case "select-block":
+				if (player.id === player.game.turn && player.game.blocks[data.index]) {
+					player.game.broadcast({
+						type: "block-selected",
+						index: data.index,
+						id: player.id,
+					});
+				}
+				break;
 			case "remove-block":
 				if (player.id === player.game.turn && player.game.blocks[data.index]) {
 					player.game.blocks[data.index] = false;
@@ -182,6 +191,10 @@ wss.on("connection", (socket) => {
 					});
 					player.game.nextTurn();
 				}
+				break;
+			case "fail-block":
+				if (player.id === player.game.turn)
+					player.game.nextTurn();
 				break;
 			default:
 				console.error(`Unknown message: "${message}"`);

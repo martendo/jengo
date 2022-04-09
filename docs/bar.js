@@ -57,15 +57,23 @@ function updateGameArea() {
 	myGamePiece.update();
 }
 
-function stopGame() {
+function stopGame(real) {
 	myGamePiece.speedX = 0;
 	myGamePiece.speedY = 0;
 	clearInterval(myGameArea.interval);
-	if (myGamePiece.y > 220 && myGamePiece.y < 300) {
-		console.log('block will be taken down')
+	if (!real)
+		return;
+	if (myGamePiece.y > 220 && myGamePiece.y + 30 < 300) {
+		sendServer({
+			type: "remove-block",
+			index: selectedBlock,
+		});
 	} else {
-		console.log(myGamePiece.y)
+		sendServer({
+			type: "fail-block",
+			index: selectedBlock,
+		});
 	}
 }
 
-document.getElementById("bar-stop").addEventListener("click", stopGame);
+document.getElementById("bar-stop").addEventListener("click", () => stopGame(true));
