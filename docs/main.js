@@ -134,14 +134,46 @@ function setTurn(id) {
 }
 
 function drawBlock(x, y) {
+	let offset = BLOCK_WIDTH * 2;
+	if (y % 2) {
+		offset = -offset;
+		ctx.fillStyle = "#c08040";
+	} else {
+		ctx.fillStyle = "#d09050";
+	}
 	ctx.strokeStyle = "#000000";
 	ctx.lineWidth = 1;
-	ctx.strokeRect(
-		canvas.width / 2 - BLOCK_WIDTH * 3 / 2 + x * BLOCK_WIDTH,
-		canvas.height / 2 + BLOCK_HEIGHT * 9 - y * BLOCK_HEIGHT,
-		BLOCK_WIDTH,
-		BLOCK_HEIGHT,
-	);
+	const originx = canvas.width / 2 + x * offset / 3;
+	const originy = canvas.height / 2 + BLOCK_HEIGHT * 9 - y * BLOCK_HEIGHT - BLOCK_WIDTH * x / 3;
+	ctx.beginPath();
+	ctx.moveTo(originx, originy);
+	ctx.lineTo(originx + offset / 3, originy - BLOCK_WIDTH / 3);
+	ctx.lineTo(originx + offset / 3, originy - BLOCK_WIDTH / 3 - BLOCK_HEIGHT);
+	ctx.lineTo(originx, originy - BLOCK_HEIGHT);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+	if (x === 0 || !blocks[y * 3 + x - 1]) {
+		if (y % 2)
+			ctx.fillStyle = "#d09050";
+		else
+			ctx.fillStyle = "#c08040";
+		ctx.beginPath();
+		ctx.moveTo(originx, originy);
+		ctx.lineTo(originx - offset, originy - BLOCK_WIDTH);
+		ctx.lineTo(originx - offset, originy - BLOCK_WIDTH - BLOCK_HEIGHT);
+		ctx.lineTo(originx, originy - BLOCK_HEIGHT);
+		ctx.fill();
+		ctx.stroke();
+	}
+	ctx.fillStyle = "#e0a060";
+	ctx.beginPath();
+	ctx.moveTo(originx + offset / 3, originy - BLOCK_WIDTH / 3 - BLOCK_HEIGHT);
+	ctx.lineTo(originx - offset * 2 / 3, originy - BLOCK_WIDTH * 4 / 3 - BLOCK_HEIGHT);
+	ctx.lineTo(originx - offset, originy - BLOCK_WIDTH - BLOCK_HEIGHT);
+	ctx.lineTo(originx, originy - BLOCK_HEIGHT);
+	ctx.fill();
+	ctx.stroke();
 }
 
 function redrawCanvas() {
