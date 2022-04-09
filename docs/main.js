@@ -137,11 +137,11 @@ function drawBlock(x, y) {
 	let offset = BLOCK_WIDTH * 2;
 	if (y % 2) {
 		offset = -offset;
-		ctx.fillStyle = "#c08040";
+		ctx.fillStyle = "#eb5850";
 	} else {
-		ctx.fillStyle = "#d09050";
+		ctx.fillStyle = "#ff7b69";
 	}
-	ctx.strokeStyle = "#000000";
+	ctx.strokeStyle = "#820000";
 	ctx.lineWidth = 1;
 	const originx = canvas.width / 2 + x * offset / 3;
 	const originy = canvas.height / 2 + BLOCK_HEIGHT * 12 - y * BLOCK_HEIGHT - BLOCK_WIDTH * x / 3;
@@ -155,9 +155,9 @@ function drawBlock(x, y) {
 	ctx.stroke();
 	if (x === 0 || !blocks[y * 3 + x - 1]) {
 		if (y % 2)
-			ctx.fillStyle = "#d09050";
+			ctx.fillStyle = "#ff7b69";
 		else
-			ctx.fillStyle = "#c08040";
+			ctx.fillStyle = "#eb5850";
 		ctx.beginPath();
 		ctx.moveTo(originx, originy);
 		ctx.lineTo(originx - offset, originy - BLOCK_WIDTH);
@@ -166,7 +166,7 @@ function drawBlock(x, y) {
 		ctx.fill();
 		ctx.stroke();
 	}
-	ctx.fillStyle = "#e0a060";
+	ctx.fillStyle = "#ff9d80";
 	ctx.beginPath();
 	ctx.moveTo(originx + offset / 3, originy - BLOCK_WIDTH / 3 - BLOCK_HEIGHT);
 	ctx.lineTo(originx - offset * 2 / 3, originy - BLOCK_WIDTH * 4 / 3 - BLOCK_HEIGHT);
