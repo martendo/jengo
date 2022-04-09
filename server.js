@@ -112,6 +112,7 @@ class Game {
 class Player {
 	constructor(connection, id) {
 		this.connection = connection;
+		this.isAlive = true;
 		this.id = id;
 		this.game = null;
 		this.points = 0;
@@ -136,6 +137,15 @@ wss.on("connection", (socket) => {
 	const player = new Player(socket, createUniqueId(players));
 	console.log(`Player "${player.id}" connected (${players.size} players)`);
 	socket.on("error", (error) => console.error(error));
+	socket.on("pong", () => {
+		player.isAlive = true;
+	});
+	const interval = setInterval(() => {
+		if (!player.isAlive)
+			return socket.terminate();
+		player.isAlive = false;
+		socket.ping();
+	}, 30000);
 	socket.on("close", (code) => {
 		players.delete(player.id);
 		console.log(`Player "${player.id}" disconnected (${players.size} players)`);
