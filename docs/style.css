@@ -1,5 +1,7 @@
 * {
 	box-sizing: border-box;
+	font-family: 'Inter', sans-serif;
+
 }
 
 html, body, section {
@@ -9,15 +11,25 @@ html, body, section {
 	height: 100%;
 }
 
+body{
+	border:solid;
+	border-radius: 3em;
+	border-color: #E60000;
+	background-color:#FFEAD8;
+}
+
 section {
 	padding: 1em;
 }
 
 button {
+	background-color: #FF5A52;
+	color:#ffffff;
 	font-size: 1.5em;
 	border: none;
 	padding: 0.25em;
 	min-width: 1.5em;
+	border-radius: 3em;
 }
 
 .close-btn {
