@@ -19,6 +19,7 @@ class Game {
 	constructor(id) {
 		this.id = id;
 		this.players = new Map();
+		games.set(this.id, this);
 		console.log(`Game "${this.id}" created (${games.size} games)`);
 	}
 
@@ -76,6 +77,17 @@ wss.on("connection", (socket) => {
 	socket.on("message", (message) => {
 		const data = JSON.parse(message);
 		switch (data.type) {
+			case "create-game":
+				if (!games.has(data.id)) {
+					const game = new Game(data.id || createUniqueId(games));
+					game.join(player);
+				} else {
+					player.send({
+						type: "game-exist",
+						id: id,
+					});
+				}
+				break;
 			case "join-game":
 				if (games.has(data.id)) {
 					games.get(data.id).join(player);
@@ -85,6 +97,10 @@ wss.on("connection", (socket) => {
 						id: data.id,
 					});
 				}
+				break;
+			case "leave-game":
+				if (player.game)
+					player.game.leave(player);
 				break;
 			default:
 				console.error(`Unknown message: "${message}"`);
