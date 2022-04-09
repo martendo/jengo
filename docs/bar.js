@@ -1,7 +1,6 @@
-var myGamePiece;
+const myGamePiece = new component(30, 30, "#FF5A52", 22.5, 120);
 
 function startGame() {
-	myGamePiece = new component(30, 30, "#FF5A52", 22.5, 120);
 	myGameArea.start();
 }
 
@@ -13,6 +12,8 @@ var myGameArea = {
 	start : function() {
 		document.getElementById("bar-stop").style.display = "unset";
 		this.interval = setInterval(updateGameArea, 20);
+		myGamePiece.speedX = 0;
+		myGamePiece.speedY = 5;
 	},
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -56,13 +57,15 @@ function updateGameArea() {
 	myGamePiece.update();
 }
 
-document.getElementById("bar-stop").addEventListener("click", () => {
+function stopGame() {
 	myGamePiece.speedX = 0;
 	myGamePiece.speedY = 0;
 	clearInterval(myGameArea.interval);
-  if (myGamePiece.y > 220 && myGamePiece.y < 300) {
-    console.log('block will be taken down')
-  } else {
-    console.log(myGamePiece.y)
-  }
-});
+	if (myGamePiece.y > 220 && myGamePiece.y < 300) {
+		console.log('block will be taken down')
+	} else {
+		console.log(myGamePiece.y)
+	}
+}
+
+document.getElementById("bar-stop").addEventListener("click", stopGame);

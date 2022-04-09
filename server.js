@@ -173,6 +173,16 @@ wss.on("connection", (socket) => {
 				if (player.game)
 					player.game.leave(player);
 				break;
+			case "remove-block":
+				if (player.id === player.game.turn && player.game.blocks[data.index]) {
+					player.game.blocks[data.index] = false;
+					player.game.broadcast({
+						type: "block-removed",
+						index: data.index,
+					});
+					player.game.nextTurn();
+				}
+				break;
 			default:
 				console.error(`Unknown message: "${message}"`);
 				break;

@@ -88,6 +88,10 @@ socket.addEventListener("message", (event) => {
 		case "turn":
 			setTurn(data.id);
 			break;
+		case "block-removed":
+			blocks[data.index] = false;
+			redrawCanvas();
+			break;
 		default:
 			console.error(`Unknown message: "${data}"`);
 			break;
@@ -125,6 +129,7 @@ function leaveGame() {
 function setTurn(id) {
 	turn = id;
 	let whose;
+	stopGame();
 	if (turn === thisId) {
 		whose = "Your";
 		startGame();
@@ -151,7 +156,7 @@ function drawBlock(x, y, select, highlight) {
 	ctx.closePath();
 	if (select && ctx.isPointInPath(cursor[0], cursor[1])) {
 		selected = true;
-	} else {
+	} else if (!select) {
 		if (highlight)
 			ctx.fillStyle = "#ff0000";
 		else if (y % 2)
@@ -170,7 +175,7 @@ function drawBlock(x, y, select, highlight) {
 		ctx.closePath();
 		if (select && ctx.isPointInPath(cursor[0], cursor[1])) {
 			selected = true;
-		} else {
+		} else if (!select) {
 			if (highlight)
 				ctx.fillStyle = "#ff0000";
 			else if (y % 2)
@@ -189,7 +194,7 @@ function drawBlock(x, y, select, highlight) {
 	ctx.closePath();
 	if (select && ctx.isPointInPath(cursor[0], cursor[1])) {
 		selected = true;
-	} else {
+	} else if (!select) {
 		if (highlight)
 			ctx.fillStyle = "#ff0000";
 		else
@@ -201,6 +206,8 @@ function drawBlock(x, y, select, highlight) {
 }
 
 function getSelectedBlock() {
+	if (turn !== thisId)
+		return null;
 	for (let y = 17; y >= 0; y--) {
 		for (let x = 0; x < 3; x++) {
 			if (blocks[y * 3 + x] && drawBlock(x, y, true, false))
@@ -252,9 +259,12 @@ canvas.addEventListener("pointermove", (event) => {
 });
 canvas.addEventListener("pointerdown", (event) => {
 	const selected = getSelectedBlock();
-	if (selected !== null)
-		blocks[selected] = false;
-	redrawCanvas();
+	if (selected !== null) {
+		sendServer({
+			type: "remove-block",
+			index: selected,
+		});
+	}
 });
 
 const gameCodeInput = document.getElementById("game-code");
