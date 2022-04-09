@@ -28,8 +28,11 @@ class Game {
 	}
 
 	join(player) {
-		if (player.game)
+		if (player.game) {
 			console.error(`Player "${player.id}" already in game "${player.game.id}"`);
+			if (player.game === this)
+				return;
+		}
 		this.players.set(player.id, player);
 		player.game = this;
 		const players = [];
@@ -41,6 +44,8 @@ class Game {
 				},
 			});
 		}
+		if (this.turn === null)
+			this.turn = player.id;
 		player.send({
 			type: "game-joined",
 			id: this.id,
@@ -56,13 +61,6 @@ class Game {
 			},
 		});
 		console.log(`Player "${player.id}" joined game "${this.id}" (${this.players.size} players)`);
-		if (this.turn === null) {
-			this.turn = player.id;
-			this.broadcast({
-				type: "turn",
-				id: this.turn,
-			});
-		}
 	}
 
 	leave(player) {

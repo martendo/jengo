@@ -69,6 +69,7 @@ socket.addEventListener("message", (event) => {
 			updateScoreboard();
 			setTurn(data.turn);
 			blocks = data.blocks;
+			resizeCanvas();
 			redrawCanvas();
 			break;
 		case "game-no-exist":
@@ -106,8 +107,6 @@ function joinGame(code) {
 	home.style.display = "none";
 	join.style.display = "";
 	game.style.display = "grid";
-	resizeCanvas();
-	updateScoreboard();
 }
 
 function leaveGame() {
@@ -163,6 +162,8 @@ window.addEventListener("resize", resizeCanvas);
 
 window.addEventListener("popstate", () => {
 	if (window.location.hash.length) {
+		if (window.location.hash.slice(1) === gameCode)
+			return;
 		sendServer({
 			type: "join-game",
 			id: decodeURIComponent(window.location.hash.slice(1)),
