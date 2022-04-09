@@ -54,7 +54,7 @@ socket.addEventListener("message", (event) => {
 			joinGame(data.id);
 			break;
 		case "game-no-exist":
-			document.getElementById("game-no-exist").style.display = "unset";
+			document.getElementById("game-no-exist").style.display = "block";
 			break;
 		case "player-joined":
 			players.add(data.id);
@@ -143,13 +143,16 @@ document.getElementById("join-game-submit").addEventListener("click", () => {
 		id: gameCodeInput.value,
 	});
 });
+document.getElementById("game-no-exist-close").addEventListener("click", () => {
+	document.getElementById("game-no-exist").style.display = "";
+});
 
 document.getElementById("game-code-btn").addEventListener("click", () => copyText(`${window.location.origin}${window.location.pathname}#${encodeURIComponent(gameCode)}`));
 
 const help = document.getElementById("help");
 document.getElementById("help-btn").addEventListener("click", () => {
-	if (help.style.display === "")
-		help.style.display = "unset";
-	else
-		help.style.display = "";
+	help.style.display = "block";
+});
+document.getElementById("help-close").addEventListener("click", () => {
+	help.style.display = "";
 });

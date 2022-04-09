@@ -61,15 +61,33 @@ button {
 	grid-column: 3;
 }
 
+#join-game {
+	display: none;
+}
+
 .modal {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
+	z-index: 100;
+	background-color: rgba(0, 0, 0, 0.25);
 	display: none;
+	vertical-align: middle;
 }
 
-#join-game {
-	display: none;
+.modal button {
+	float: right;
+	font-size: 1rem;
+}
+
+.modal section {
+	background-color: #ffffff;
+	margin: auto;
+	width: 0;
+	height: unset;
+	min-width: 60%;
+	max-width: 80%;
+	max-height: 60%;
 }
