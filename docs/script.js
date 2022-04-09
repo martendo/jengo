@@ -41,7 +41,10 @@ function updateScoreboard() {
 
 const socket = new WebSocket(WSS_URL);
 socket.addEventListener("error", (event) => console.error("WebSocket error: ", event));
-socket.addEventListener("close", (event) => console.log("WebSocket closed"));
+socket.addEventListener("close", (event) => {
+	console.log("WebSocket closed");
+	document.getElementById("ws-closed").style.display = "block";
+});
 socket.addEventListener("open", () => {
 	console.log("WebSocket opened");
 	if (window.location.hash.length) {
@@ -191,4 +194,8 @@ document.getElementById("help-btn").addEventListener("click", () => {
 });
 document.getElementById("help-close").addEventListener("click", () => {
 	help.style.display = "";
+});
+
+document.getElementById("ws-closed-close").addEventListener("click", () => {
+	document.getElementById("ws-closed").style.display = "";
 });
