@@ -15,6 +15,13 @@ body {
 	grid-template-columns: auto minmax(0, 1fr) auto;
 }
 
+button {
+	font-size: 1.5em;
+	border: none;
+	padding: 0.25em;
+	min-width: 1.5em;
+}
+
 #left-bar {
 	grid-row: 1 / span 3;
 	grid-column: 1;
@@ -30,6 +37,7 @@ body {
 #info-box {
 	grid-row: 1;
 	grid-column: 3;
+	text-align: right;
 }
 
 #canvas {
@@ -47,4 +55,13 @@ body {
 #chat {
 	grid-row: 3;
 	grid-column: 3;
+}
+
+#help {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: none;
 }
