@@ -19,6 +19,7 @@ class Game {
 	constructor(id) {
 		this.id = id;
 		this.players = new Map();
+		this.turn = null;
 		this.blocks = [];
 		for (let i = 0; i < 54; i++)
 			this.blocks.push(true);
@@ -45,6 +46,7 @@ class Game {
 			id: this.id,
 			players: players,
 			blocks: this.blocks,
+			turn: this.turn,
 		});
 		player.broadcast({
 			type: "player-joined",
@@ -54,6 +56,13 @@ class Game {
 			},
 		});
 		console.log(`Player "${player.id}" joined game "${this.id}" (${this.players.size} players)`);
+		if (this.turn === null) {
+			this.turn = player.id;
+			this.broadcast({
+				type: "turn",
+				id: this.turn,
+			});
+		}
 	}
 
 	leave(player) {
@@ -70,7 +79,33 @@ class Game {
 		if (!this.players.size) {
 			games.delete(this.id);
 			console.log(`Game "${this.id}" deleted (${games.size} games)`);
+			return;
 		}
+
+		if (player.id === this.turn)
+			this.nextTurn();
+	}
+
+	broadcast(data) {
+		for (const player of this.players.values())
+			player.send(data);
+	}
+
+	nextTurn() {
+		const iter = this.players.keys();
+		for (const id of iter) {
+			if (id === this.turn)
+				break;
+		}
+		const next = iter.next();
+		if (next.done)
+			this.turn = this.players.keys().next().value;
+		else
+			this.turn = next.value;
+		this.broadcast({
+			type: "turn",
+			id: this.turn,
+		});
 	}
 }
 
@@ -90,10 +125,10 @@ class Player {
 	broadcast(data) {
 		if (!this.game)
 			return;
-		this.game.players.forEach((player) => {
+		for (const player of this.game.players.values()) {
 			if (player !== this)
 				player.send(data);
-		});
+		}
 	}
 }
 

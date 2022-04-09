@@ -9,6 +9,7 @@ const ctx = canvas.getContext("2d");
 let gameCode = null;
 let thisId = null;
 let players = new Map();
+let turn = null;
 
 let blocks = null;
 
@@ -66,6 +67,7 @@ socket.addEventListener("message", (event) => {
 			for (const p of data.players)
 				players.set(p.id, p.player);
 			updateScoreboard();
+			setTurn(data.turn);
 			blocks = data.blocks;
 			redrawCanvas();
 			break;
@@ -79,6 +81,9 @@ socket.addEventListener("message", (event) => {
 		case "player-left":
 			players.delete(data.id);
 			updateScoreboard();
+			break;
+		case "turn":
+			setTurn(data.id);
 			break;
 		default:
 			console.error(`Unknown message: "${data}"`);
@@ -114,6 +119,16 @@ function leaveGame() {
 	home.style.display = "";
 	join.style.display = "";
 	game.style.display = "";
+}
+
+function setTurn(id) {
+	turn = id;
+	let whose;
+	if (turn === thisId)
+		whose = "Your";
+	else
+		whose = `${turn}'s`;
+	document.getElementById("turn").textContent = whose;
 }
 
 function drawBlock(x, y) {
