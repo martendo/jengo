@@ -81,6 +81,7 @@ const game = document.getElementById("game");
 function joinGame(code) {
 	gameCode = code;
 	window.location.hash = gameCode;
+	gameCodeBtn.textContent = gameCode;
 	home.style.display = "none";
 	join.style.display = "";
 	game.style.display = "grid";
@@ -152,7 +153,8 @@ document.getElementById("game-no-exist-close").addEventListener("click", () => {
 	document.getElementById("game-no-exist").style.display = "";
 });
 
-document.getElementById("game-code-btn").addEventListener("click", () => copyText(`${window.location.origin}${window.location.pathname}#${encodeURIComponent(gameCode)}`));
+const gameCodeBtn = document.getElementById("game-code-btn");
+gameCodeBtn.addEventListener("click", () => copyText(`${window.location.origin}${window.location.pathname}#${encodeURIComponent(gameCode)}`));
 
 const help = document.getElementById("help");
 document.getElementById("help-btn").addEventListener("click", () => {
