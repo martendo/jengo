@@ -32,6 +32,12 @@ button {
 	border-radius: 3em;
 }
 
+button:hover{
+  background-color:#ffa078;
+  color:#E60000;
+  transition: 0.5s;
+}
+
 .close-btn {
 	float: right;
 	font-size: 1rem;
