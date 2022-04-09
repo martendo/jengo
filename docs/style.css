@@ -20,6 +20,11 @@ button {
 	min-width: 1.5em;
 }
 
+.close-btn {
+	float: right;
+	font-size: 1rem;
+}
+
 #game {
 	display: none;
 	grid-template-rows: auto auto minmax(0, 1fr);
@@ -75,11 +80,6 @@ button {
 	background-color: rgba(0, 0, 0, 0.25);
 	display: none;
 	vertical-align: middle;
-}
-
-.modal button {
-	float: right;
-	font-size: 1rem;
 }
 
 .modal section {

@@ -143,6 +143,11 @@ document.getElementById("join-game-submit").addEventListener("click", () => {
 		id: gameCodeInput.value,
 	});
 });
+document.getElementById("join-game-back").addEventListener("click", () => {
+	home.style.display = "";
+	join.style.display = "";
+	game.style.display = "";
+});
 document.getElementById("game-no-exist-close").addEventListener("click", () => {
 	document.getElementById("game-no-exist").style.display = "";
 });
