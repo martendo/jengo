@@ -33,7 +33,7 @@ function component(width, height, color, x, y) {
 		const ctx = myGameArea.context;
 		ctx.fillStyle = color;
 		ctx.fillRect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "red";
     ctx.globalAlpha = 0.2;
     ctx.fillRect(0, 220, 75, 80);
     ctx.globalAlpha = 1.0;
