@@ -189,6 +189,12 @@ wss.on("connection", (socket) => {
 						type: "block-removed",
 						index: data.index,
 					});
+					player.points += 50;
+					player.game.broadcast({
+						type: "points",
+						id: player.id,
+						points: player.points,
+					});
 					player.game.nextTurn();
 				}
 				break;

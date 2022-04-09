@@ -102,6 +102,10 @@ socket.addEventListener("message", (event) => {
 				startGame();
 			redrawCanvas();
 			break;
+		case "points":
+			players.get(data.id).points = data.points;
+			updateScoreboard();
+			break;
 		default:
 			console.error(`Unknown message: "${data}"`);
 			break;
