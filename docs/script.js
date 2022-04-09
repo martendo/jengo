@@ -4,7 +4,8 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let gameCode = null;
-const players = new Set();
+let thisId = null;
+let players = new Map();
 
 function copyText(text) {
 	navigator.clipboard.writeText(text).catch(() => {
@@ -26,12 +27,10 @@ function updateScoreboard() {
 	for (let i = scoreboardTbody.children.length - 1; i >= 0; i--)
 		scoreboardTbody.removeChild(scoreboardTbody.children[i]);
 	const row = scoreboardTbody.insertRow(-1);
-	row.insertCell(0).textContent = "You";
-	row.insertCell(1).textContent = "X";
-	for (const player of players) {
+	for (const [id, player] of players) {
 		const row = scoreboardTbody.insertRow(-1);
-		row.insertCell(0).textContent = player;
-		row.insertCell(1).textContent = "X";
+		row.insertCell(0).textContent = id === thisId ? "You" : id;
+		row.insertCell(1).textContent = player.points;
 	}
 }
 
@@ -50,14 +49,21 @@ socket.addEventListener("open", () => {
 socket.addEventListener("message", (event) => {
 	const data = JSON.parse(event.data);
 	switch (data.type) {
+		case "connected":
+			thisId = data.id;
+			break;
 		case "game-joined":
 			joinGame(data.id);
+			players = new Map();
+			for (const p of data.players)
+				players.set(p.id, p.player);
+			updateScoreboard();
 			break;
 		case "game-no-exist":
 			document.getElementById("game-no-exist").style.display = "block";
 			break;
 		case "player-joined":
-			players.add(data.id);
+			players.set(data.id, data.player);
 			updateScoreboard();
 			break;
 		case "player-left":

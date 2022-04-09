@@ -28,13 +28,26 @@ class Game {
 			console.error(`Player "${player.id}" already in game "${player.game.id}"`);
 		this.players.set(player.id, player);
 		player.game = this;
+		const players = [];
+		for (const [id, player] of this.players) {
+			players.push({
+				id: id,
+				player: {
+					points: player.points,
+				},
+			});
+		}
 		player.send({
 			type: "game-joined",
 			id: this.id,
+			players: players,
 		});
 		player.broadcast({
 			type: "player-joined",
 			id: player.id,
+			player: {
+				points: player.points,
+			},
 		});
 		console.log(`Player "${player.id}" joined game "${this.id}" (${this.players.size} players)`);
 	}
@@ -62,6 +75,7 @@ class Player {
 		this.connection = connection;
 		this.id = id;
 		this.game = null;
+		this.points = 0;
 		players.set(this.id, this);
 	}
 
@@ -116,5 +130,9 @@ wss.on("connection", (socket) => {
 				console.error(`Unknown message: "${message}"`);
 				break;
 		}
+	});
+	player.send({
+		type: "connected",
+		id: player.id,
 	});
 });
