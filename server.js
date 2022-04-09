@@ -32,6 +32,10 @@ class Game {
 			type: "game-joined",
 			id: this.id,
 		});
+		player.broadcast({
+			type: "player-joined",
+			id: player.id,
+		});
 		console.log(`Player "${player.id}" joined game "${this.id}" (${this.players.size} players)`);
 	}
 
@@ -39,6 +43,10 @@ class Game {
 		if (player.game !== this)
 			console.error(`Player "${player.id}" not in game "${this.id}"`);
 		this.players.delete(player.id);
+		player.broadcast({
+			type: "player-left",
+			id: player.id,
+		});
 		player.game = null;
 		console.log(`Player "${player.id}" left game "${this.id}" (${this.players.size} players)`);
 
@@ -59,6 +67,15 @@ class Player {
 
 	send(data) {
 		this.connection.send(JSON.stringify(data));
+	}
+
+	broadcast(data) {
+		if (!this.game)
+			return;
+		this.game.players.forEach((player) => {
+			if (player !== this)
+				player.send(data);
+		});
 	}
 }
 

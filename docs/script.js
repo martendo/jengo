@@ -4,6 +4,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let gameCode = null;
+const players = new Set();
 
 function copyText(text) {
 	navigator.clipboard.writeText(text).catch(() => {
@@ -17,6 +18,21 @@ function copyText(text) {
 		document.execCommand("copy");
 		document.body.removeChild(textarea);
 	});
+}
+
+const scoreboardTbody = document.getElementById("scoreboard-tbody");
+
+function updateScoreboard() {
+	for (let i = scoreboardTbody.children.length - 1; i >= 0; i--)
+		scoreboardTbody.removeChild(scoreboardTbody.children[i]);
+	const row = scoreboardTbody.insertRow(-1);
+	row.insertCell(0).textContent = "You";
+	row.insertCell(1).textContent = "X";
+	for (const player of players) {
+		const row = scoreboardTbody.insertRow(-1);
+		row.insertCell(0).textContent = player;
+		row.insertCell(1).textContent = "X";
+	}
 }
 
 const socket = new WebSocket(WSS_URL);
@@ -40,6 +56,14 @@ socket.addEventListener("message", (event) => {
 		case "game-exist":
 		case "game-no-exist":
 			leaveGame();
+			break;
+		case "player-joined":
+			players.add(data.id);
+			updateScoreboard();
+			break;
+		case "player-left":
+			players.delete(data.id);
+			updateScoreboard();
 			break;
 		default:
 			console.error(`Unknown message: "${data}"`);
