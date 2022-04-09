@@ -1,3 +1,5 @@
+const WSS_URL = "wss://jengo-yrhacks2022.herokuapp.com";
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -17,17 +19,47 @@ function copyText(text) {
 	});
 }
 
+const socket = new WebSocket(WSS_URL);
+socket.addEventListener("error", (event) => console.error("WebSocket error: ", event));
+socket.addEventListener("close", (event) => console.log("WebSocket closed"));
+socket.addEventListener("open", () => {
+	console.log("WebSocket opened")
+	if (window.location.hash.length)
+		joinGame(decodeURIComponent(window.location.hash.slice(1)));
+});
+socket.addEventListener("message", (event) => {
+	const data = JSON.parse(event.data);
+	switch (data.type) {
+		case "game-joined":
+			gameCode = code;
+			window.location.hash = gameCode;
+			home.style.display = "none";
+			game.style.display = "grid";
+			resizeCanvas();
+			break;
+		case "game-no-exist":
+			console.log("game-no-exist");
+			break;
+		default:
+			console.error(`Unknown message: "${data}"`);
+			break;
+	}
+});
+
+function sendServer(data) {
+	socket.send(JSON.stringify(data));
+}
+
 const home = document.getElementById("home");
 const game = document.getElementById("game");
 
 function joinGame(code) {
 	if (!code.length)
 		return;
-	gameCode = code;
-	window.location.hash = gameCode;
-	home.style.display = "none";
-	game.style.display = "grid";
-	resizeCanvas();
+	sendServer({
+		type: "join-game",
+		id: code,
+	});
 }
 
 function redrawCanvas() {
@@ -67,6 +99,3 @@ document.getElementById("help-btn").addEventListener("click", () => {
 	else
 		help.style.display = "";
 });
-
-if (window.location.hash.length)
-	joinGame(decodeURIComponent(window.location.hash.slice(1)));

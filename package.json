@@ -1,0 +1,21 @@
+{
+  "name": "jengo",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martendo/jengo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/martendo/jengo/issues"
+  },
+  "homepage": "https://github.com/martendo/jengo",
+  "dependencies": {
+    "ws": "^8.5.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.6",
+    "utf-8-validate": "^5.0.9"
+  }
+}
