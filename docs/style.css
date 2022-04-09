@@ -34,6 +34,16 @@ button {
 #left-bar {
 	grid-row: 1 / span 3;
 	grid-column: 1;
+	display: table;
+}
+
+#bar-container {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#bar-stop {
+	display: none;
 }
 
 #top-bar {

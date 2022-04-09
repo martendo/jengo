@@ -74,6 +74,7 @@ socket.addEventListener("message", (event) => {
 			break;
 		case "game-no-exist":
 			document.getElementById("game-no-exist").style.display = "block";
+			window.history.replaceState(null, "", window.location.pathname);
 			break;
 		case "player-joined":
 			players.set(data.id, data.player);
@@ -123,10 +124,12 @@ function leaveGame() {
 function setTurn(id) {
 	turn = id;
 	let whose;
-	if (turn === thisId)
+	if (turn === thisId) {
 		whose = "Your";
-	else
+		startGame();
+	} else {
 		whose = `${turn}'s`;
+	}
 	document.getElementById("turn").textContent = whose;
 }
 
@@ -153,6 +156,7 @@ function redrawCanvas() {
 }
 
 function resizeCanvas() {
+	myGameArea.resize();
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
 	redrawCanvas();
