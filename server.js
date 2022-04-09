@@ -95,15 +95,8 @@ wss.on("connection", (socket) => {
 		const data = JSON.parse(message);
 		switch (data.type) {
 			case "create-game":
-				if (!games.has(data.id)) {
-					const game = new Game(data.id || createUniqueId(games));
-					game.join(player);
-				} else {
-					player.send({
-						type: "game-exist",
-						id: id,
-					});
-				}
+				const game = new Game(createUniqueId(games));
+				game.join(player);
 				break;
 			case "join-game":
 				if (games.has(data.id)) {

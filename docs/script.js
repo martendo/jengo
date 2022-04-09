@@ -53,9 +53,8 @@ socket.addEventListener("message", (event) => {
 		case "game-joined":
 			joinGame(data.id);
 			break;
-		case "game-exist":
 		case "game-no-exist":
-			leaveGame();
+			document.getElementById("game-no-exist").style.display = "unset";
 			break;
 		case "player-joined":
 			players.add(data.id);
@@ -76,14 +75,17 @@ function sendServer(data) {
 }
 
 const home = document.getElementById("home");
+const join = document.getElementById("join-game");
 const game = document.getElementById("game");
 
 function joinGame(code) {
 	gameCode = code;
 	window.location.hash = gameCode;
 	home.style.display = "none";
+	join.style.display = "";
 	game.style.display = "grid";
 	resizeCanvas();
+	updateScoreboard();
 }
 
 function leaveGame() {
@@ -93,6 +95,7 @@ function leaveGame() {
 	gameCode = null;
 	window.history.replaceState(null, "", window.location.pathname);
 	home.style.display = "";
+	join.style.display = "";
 	game.style.display = "";
 }
 
@@ -122,16 +125,17 @@ window.addEventListener("popstate", () => {
 });
 
 const gameCodeInput = document.getElementById("game-code");
-document.getElementById("create-game").addEventListener("click", () => {
-	let id = gameCodeInput.value;
-	if (!id.length)
-		id = null;
+document.getElementById("create-game-btn").addEventListener("click", () => {
 	sendServer({
 		type: "create-game",
-		id: id,
 	});
 });
-document.getElementById("join-game").addEventListener("click", () => {
+document.getElementById("join-game-btn").addEventListener("click", () => {
+	home.style.display = "none";
+	join.style.display = "block";
+	game.style.dispaly = "";
+});
+document.getElementById("join-game-submit").addEventListener("click", () => {
 	if (!gameCodeInput.value.length)
 		return;
 	sendServer({

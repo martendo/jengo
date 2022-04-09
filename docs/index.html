@@ -8,8 +8,14 @@
 	<body>
 		<section id="home">
 			<h1>Jengo</h1>
-			<p><button id="create-game">Create Game</button> <button id="join-game">Join Game</button></p>
+			<p><button id="create-game-btn">Create Game</button></p>
+			<p><button id="join-game-btn">Join Game</button></p>
+		</section>
+
+		<section id="join-game">
+			<h1>Join Game</h1>
 			<p><label for="game-code">Game code: </label><input id="game-code" type="text"></p>
+			<p><button id="join-game-submit">Join Game</button></p>
 		</section>
 
 		<section id="game">
@@ -45,9 +51,13 @@
 			<div id="chat">chat</div>
 		</section>
 
-		<section id="help">
-			<h2>How To Play</h2>
+		<section id="help" class="modal">
+			<h1>How To Play</h2>
 			<p>blah blah blah</p>
+		</section>
+
+		<section id="game-no-exist" class="modal">
+			<p>Game does not exist.</p>
 		</section>
 
 		<script src="script.js"></script>
