@@ -12,6 +12,7 @@ let players = new Map();
 let turn = null;
 
 let blocks = null;
+let cursor = [0, 0];
 
 function copyText(text) {
 	navigator.clipboard.writeText(text).catch(() => {
@@ -133,14 +134,11 @@ function setTurn(id) {
 	document.getElementById("turn").textContent = whose;
 }
 
-function drawBlock(x, y) {
+function drawBlock(x, y, select, highlight) {
 	let offset = BLOCK_WIDTH * 2;
-	if (y % 2) {
+	if (y % 2)
 		offset = -offset;
-		ctx.fillStyle = "#eb5850";
-	} else {
-		ctx.fillStyle = "#ff7b69";
-	}
+	let selected = false;
 	ctx.strokeStyle = "#820000";
 	ctx.lineWidth = 1;
 	const originx = canvas.width / 2 + x * offset / 3;
@@ -151,38 +149,75 @@ function drawBlock(x, y) {
 	ctx.lineTo(originx + offset / 3, originy - BLOCK_WIDTH / 3 - BLOCK_HEIGHT);
 	ctx.lineTo(originx, originy - BLOCK_HEIGHT);
 	ctx.closePath();
-	ctx.fill();
-	ctx.stroke();
-	if (x === 0 || !blocks[y * 3 + x - 1]) {
-		if (y % 2)
-			ctx.fillStyle = "#ff7b69";
-		else
+	if (select && ctx.isPointInPath(cursor[0], cursor[1])) {
+		selected = true;
+	} else {
+		if (highlight)
+			ctx.fillStyle = "#ff0000";
+		else if (y % 2)
 			ctx.fillStyle = "#eb5850";
+		else
+			ctx.fillStyle = "#ff7b69";
+		ctx.fill();
+		ctx.stroke();
+	}
+	if (x === 0 || !blocks[y * 3 + x - 1]) {
 		ctx.beginPath();
 		ctx.moveTo(originx, originy);
 		ctx.lineTo(originx - offset, originy - BLOCK_WIDTH);
 		ctx.lineTo(originx - offset, originy - BLOCK_WIDTH - BLOCK_HEIGHT);
 		ctx.lineTo(originx, originy - BLOCK_HEIGHT);
-		ctx.fill();
-		ctx.stroke();
+		ctx.closePath();
+		if (select && ctx.isPointInPath(cursor[0], cursor[1])) {
+			selected = true;
+		} else {
+			if (highlight)
+				ctx.fillStyle = "#ff0000";
+			else if (y % 2)
+				ctx.fillStyle = "#ff7b69";
+			else
+				ctx.fillStyle = "#eb5850";
+			ctx.fill();
+			ctx.stroke();
+		}
 	}
-	ctx.fillStyle = "#ff9d80";
 	ctx.beginPath();
 	ctx.moveTo(originx + offset / 3, originy - BLOCK_WIDTH / 3 - BLOCK_HEIGHT);
 	ctx.lineTo(originx - offset * 2 / 3, originy - BLOCK_WIDTH * 4 / 3 - BLOCK_HEIGHT);
 	ctx.lineTo(originx - offset, originy - BLOCK_WIDTH - BLOCK_HEIGHT);
 	ctx.lineTo(originx, originy - BLOCK_HEIGHT);
-	ctx.fill();
-	ctx.stroke();
+	ctx.closePath();
+	if (select && ctx.isPointInPath(cursor[0], cursor[1])) {
+		selected = true;
+	} else {
+		if (highlight)
+			ctx.fillStyle = "#ff0000";
+		else
+			ctx.fillStyle = "#ff9d80";
+		ctx.fill();
+		ctx.stroke();
+	}
+	return selected;
 }
 
 function redrawCanvas() {
 	if (blocks === null)
 		return;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	let selected = null;
+select:
+	for (let y = 17; y >= 0; y--) {
+		for (let x = 0; x < 3; x++) {
+			if (blocks[y * 3 + x] && drawBlock(x, y, true, false)) {
+				selected = y * 3 + x;
+				break select;
+			}
+		}
+	}
 	for (let y = 0; y < 18; y++) {
 		for (let x = 0; x < 3; x++) {
 			if (blocks[y * 3 + x])
-				drawBlock(x, y);
+				drawBlock(x, y, false, y * 3 + x === selected);
 		}
 	}
 }
@@ -207,6 +242,12 @@ window.addEventListener("popstate", () => {
 	} else {
 		leaveGame();
 	}
+});
+
+canvas.addEventListener("pointermove", (event) => {
+	cursor[0] = event.offsetX;
+	cursor[1] = event.offsetY;
+	redrawCanvas();
 });
 
 const gameCodeInput = document.getElementById("game-code");
