@@ -19,6 +19,9 @@ class Game {
 	constructor(id) {
 		this.id = id;
 		this.players = new Map();
+		this.blocks = [];
+		for (let i = 0; i < 54; i++)
+			this.blocks.push(true);
 		games.set(this.id, this);
 		console.log(`Game "${this.id}" created (${games.size} games)`);
 	}
@@ -41,6 +44,7 @@ class Game {
 			type: "game-joined",
 			id: this.id,
 			players: players,
+			blocks: this.blocks,
 		});
 		player.broadcast({
 			type: "player-joined",

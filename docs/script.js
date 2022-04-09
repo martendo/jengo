@@ -1,11 +1,16 @@
 const WSS_URL = "wss://jengo-yrhacks2022.herokuapp.com";
 
+const BLOCK_WIDTH = 50;
+const BLOCK_HEIGHT = 30;
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let gameCode = null;
 let thisId = null;
 let players = new Map();
+
+let blocks = null;
 
 function copyText(text) {
 	navigator.clipboard.writeText(text).catch(() => {
@@ -58,6 +63,8 @@ socket.addEventListener("message", (event) => {
 			for (const p of data.players)
 				players.set(p.id, p.player);
 			updateScoreboard();
+			blocks = data.blocks;
+			redrawCanvas();
 			break;
 		case "game-no-exist":
 			document.getElementById("game-no-exist").style.display = "block";
@@ -106,10 +113,26 @@ function leaveGame() {
 	game.style.display = "";
 }
 
-function redrawCanvas() {
+function drawBlock(x, y) {
 	ctx.strokeStyle = "#000000";
 	ctx.lineWidth = 1;
-	ctx.strokeRect(canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
+	ctx.strokeRect(
+		canvas.width / 2 - BLOCK_WIDTH * 3 / 2 + x * BLOCK_WIDTH,
+		canvas.height / 2 + BLOCK_HEIGHT * 9 - y * BLOCK_HEIGHT,
+		BLOCK_WIDTH,
+		BLOCK_HEIGHT,
+	);
+}
+
+function redrawCanvas() {
+	if (blocks === null)
+		return;
+	for (let y = 0; y < 18; y++) {
+		for (let x = 0; x < 3; x++) {
+			if (blocks[y * 3 + x])
+				drawBlock(x, y);
+		}
+	}
 }
 
 function resizeCanvas() {
